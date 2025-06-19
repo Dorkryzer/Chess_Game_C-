@@ -18,7 +18,7 @@ namespace Chess_proj
             string kasparov = "e2e4e7e5g1f3b8c6d2d4e5d4f3d4g8f6d4c6b7c6e4e5d8e7d1e2f6d5c2c4e7b4b1d2d5f4e2e3f4g6f1d3f8c5e3g3e8g8e1g1d7d6d2b3g6e5a2a3b4b6b3c5b6c5c1e3c5a5b2b4a5a4e3d4f7f6d4e5f6e5f2f4c8f5f4e5f5d3g3d3d6e5d3d7a4b3d7c6b3e3g1h1g8h8f1e1e3c3c6c7a8c8c7a7c8c4h2h3c4f4a7c5c3b2c5e5b2b3e5e3b3c4a1c1c4f7e3g3h7h6b4b5f7d5a3a4f4a4c1b1f8f5b5b6f5g5b6b7d5b7g3g5";
             */
             ChessGame game1 = new ChessGame();
-            game1.play();
+            game1.Play();
             //////////////
         }
     }
@@ -40,7 +40,7 @@ namespace Chess_proj
             {
                 return this.name + " ";
             }
-        public void changeCoordinates(int newRow, int newCol)
+        public void ChangeCoordinates(int newRow, int newCol)
             {
                 this.row = newRow;
                 this.col = newCol;
@@ -49,7 +49,7 @@ namespace Chess_proj
             {
                 Console.WriteLine("" + row + " " + col);
             }
-        public bool iswhite()
+        public bool Iswhite()
          {
           return this.isWhite;
          }
@@ -57,11 +57,11 @@ namespace Chess_proj
             {
                 return this.name;
             }
-        public int getRow()
+        public int GetRow()
             {
                 return this.row;
             }
-        public int getCol()
+        public int GetCol()
             {
                 return this.col;
             }
@@ -126,10 +126,10 @@ namespace Chess_proj
                         //this.setTwoJumps();
                         return 1;
                     }
-                    if ((col - destCol == 1 || destCol - col == 1) && row - destRow == 1 && board[destRow, destCol] != null && (board[destRow, destCol].iswhite() == false))
+                    if ((col - destCol == 1 || destCol - col == 1) && row - destRow == 1 && board[destRow, destCol] != null && (board[destRow, destCol].Iswhite() == false))
                         return 1;
                     if ((col - destCol == 1 || destCol - col == 1) && row - destRow == 1
-                        && board[destRow, destCol] == null && (board[row, destCol] is Pawn) && !board[row,destCol].iswhite())
+                        && board[destRow, destCol] == null && (board[row, destCol] is Pawn) && !board[row,destCol].Iswhite())
                     {
                         Pawn pawn1 = (Pawn)board[row, destCol];
                         if (pawn1.getPersonalCounter() + 1 == globalCounter)
@@ -146,10 +146,10 @@ namespace Chess_proj
                     }
                     if (destCol == col && destRow - row == 1 && board[destRow, destCol] == null)
                         return 2;
-                    if ((col - destCol == 1 || destCol - col == 1) && destRow - row == 1 && board[destRow, destCol] != null && (board[destRow, destCol].iswhite() == true))
+                    if ((col - destCol == 1 || destCol - col == 1) && destRow - row == 1 && board[destRow, destCol] != null && (board[destRow, destCol].Iswhite() == true))
                         return 2;
                     if ((col - destCol == 1 || destCol - col == 1) && destRow - row == 1
-                            && board[destRow, destCol] == null && (board[row, destCol] is Pawn) && board[row, destCol].iswhite())
+                            && board[destRow, destCol] == null && (board[row, destCol] is Pawn) && board[row, destCol].Iswhite())
                     {
                         Pawn pawn1 = (Pawn)board[row, destCol];
                         if (pawn1.getPersonalCounter() + 1 == globalCounter)
@@ -159,7 +159,7 @@ namespace Chess_proj
                 return 0;
 
             }
-            public void Promotion(int destRow, int destCol, bool iswhite, ChessPart[,] board, int counter, ChessPart[] newPart)
+            public void Promotion(int destRow, int destCol, bool iswhite, ChessPart[,] board)
             {
                 if ((iswhite && board[destRow, destCol] == board[0, destCol]) || (!iswhite && board[destRow, destCol] == board[7, destCol]))
                 {
@@ -179,30 +179,22 @@ namespace Chess_proj
                         {
                             case "q":
                             case "Q":
-                                newPart[counter] = new Queen(destRow, destCol, iswhite, "Q" + ColorLetter);
-                                board[destRow, destCol] = newPart[counter];
-                                counter++;
+                                board[destRow, destCol] = new Queen(destRow, destCol, iswhite, "Q" + ColorLetter);   
                                 badinput = false;
                                 break;
                             case "r":
                             case "R":
-                                newPart[counter] = new Rook(destRow, destCol, iswhite, "R" + ColorLetter);
-                                board[destRow, destCol] = newPart[counter];
-                                counter++;
+                                board[destRow, destCol] = new Rook(destRow, destCol, iswhite, "R" + ColorLetter);
                                 badinput = false;
                                 break;
                             case "b":
                             case "B":
-                                newPart[counter] = new Bishop(destRow, destCol, iswhite, "B" + ColorLetter);
-                                board[destRow, destCol] = newPart[counter];
-                                counter++;
+                                board[destRow, destCol] = new Bishop(destRow, destCol, iswhite, "B" + ColorLetter);
                                 badinput = false;
                                 break;
                             case "n":
                             case "N":
-                                newPart[counter] = new Knight(destRow, destCol, iswhite, "N" + ColorLetter);
-                                board[destRow, destCol] = newPart[counter];
-                                counter++;
+                                board[destRow, destCol] = new Knight(destRow, destCol, iswhite, "N" + ColorLetter);
                                 badinput = false;
                                 break;
                             default:
@@ -538,7 +530,7 @@ namespace Chess_proj
             {
                 return WasinCheck;
             }
-        public bool Notincheck()
+        public bool NotInCheck()
             {
                 this.isIncheck = false;
                 return true;
@@ -603,32 +595,28 @@ namespace Chess_proj
                         return 1;
                     }
                 }
-                if ((inCheck() == false && getMoved() == false) && absColGap > 1 && (((destRow == 7 && destCol == 1 && board[7, 0] != null && board[7, 0].iswhite() && board[7, 1] == null && board[7, 2] == null && board[7, 3] == null)) && row == 7 || ((destRow == 7 && destCol == 6 && board[7, 7] != null && board[7, 7].iswhite()) && board[7, 6] == null && board[7, 5] == null) && row == 7 || row == 0 && ((destRow == 0 && destCol == 1 && board[0, 0] != null && !board[0, 0].iswhite()) && board[0, 1] == null && board[0, 2] == null && board[0, 3] == null) || row == 0 && ((destRow == 0 && destCol == 6 && board[0, 7] != null && !board[0, 7].iswhite() && board[0, 5] == null && board[0, 6] == null))))
+                if ((inCheck() == false && getMoved() == false) && absColGap > 1 && (((destRow == 7 && destCol == 1 && board[7, 0] != null && board[7, 0].Iswhite() && board[7, 1] == null && board[7, 2] == null && board[7, 3] == null)) && row == 7 || ((destRow == 7 && destCol == 6 && board[7, 7] != null && board[7, 7].Iswhite()) && board[7, 6] == null && board[7, 5] == null) && row == 7 || row == 0 && ((destRow == 0 && destCol == 1 && board[0, 0] != null && !board[0, 0].Iswhite()) && board[0, 1] == null && board[0, 2] == null && board[0, 3] == null) || row == 0 && ((destRow == 0 && destCol == 6 && board[0, 7] != null && !board[0, 7].Iswhite() && board[0, 5] == null && board[0, 6] == null))))
                     return 2;
                 return 0;
             }
         }
     class ChessGame
     {
-        string input;
         int turnCount = 1;
         bool gameRunning = true;
-        int whitepartCounter = 0;
-        int blackpartCounter = 0;
-        int[] lastturns = new int[2]; //item 0 is last time a pawn moved, item 1 is last time a piece was eaten
+        int lastTimePawnMoved;
+        int lastTurnPieceWasTaken;
         int inputCounter = 0;
         string snapShots;
-        ChessPart[,] board;
-        ChessPart[] extraWhitepieces = new ChessPart[8];
-        ChessPart[] extraBlackpieces = new ChessPart[8];
+        ChessPart[,] board; 
         King Kw, Kb;
         public ChessGame()
         {
-            init();
-            this.lastturns[0] = 0;
-            this.lastturns[1] = 0;
+            Init();
+            this.lastTimePawnMoved = 0;
+            this.lastTurnPieceWasTaken = 0;
         }
-        public void init()
+        public void Init()
         {
             board = new ChessPart[8, 8];
             Kw = new King(7, 4, true, "Kw");
@@ -659,13 +647,14 @@ namespace Chess_proj
                         board[row, col] = new Pawn(6, col, true, "Pw", true);
                 }
             }
-            snapShots = snapShotTheBoard();
+            snapShots = SnapShotTheBoard();
         }
-        public void play()
+        public void Play()
         {
-            printBoard();
+            PrintBoard();
             while (gameRunning)
             {
+                string input;
                 do
                 {
                     string CurrentPlayerColor = turnCount % 2 == 0 ? "BLACK" : "WHITE";
@@ -673,59 +662,59 @@ namespace Chess_proj
                     input = Console.ReadLine(); //------------************USER INPUT************-------------
                     //input = inputString.Substring(inputCounter, 4);
                     //Console.WriteLine(input);
-                    if (isStalemateRequasted(input,CurrentPlayerColor))
+                    if (IsStalemateRequasted(input,CurrentPlayerColor))
                     {
                         Console.WriteLine("GAME OVER");
                         gameRunning = false;
                         break;
                     }
                     //Console.ReadLine();
-                } while (!(isValidInput(input, turnCount)) && gameRunning);
-                if (!isMovementvalid(Kw, Kb, digitFromInput(input[1]), letterFromInput(input[0]), digitFromInput(input[3]), letterFromInput(input[2]), turnCount, whitepartCounter, extraWhitepieces, blackpartCounter, extraBlackpieces, lastturns))
+                } while (!(IsValidInput(input)) && gameRunning);
+                if (!IsMovementvalid(Kw, Kb, DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2])))
                     continue;
                 if (!gameRunning)
                 {
                     break;
                 }
-                printBoard();
+                PrintBoard();
                 turnCount++;
                 inputCounter += 4; 
                 bool stalemate;
                 if (turnCount % 2 == 0)
                 {
-                    gameRunning = isMate(Kb);
-                    stalemate = isBaseStalemate(Kb, Kb.inCheck());
+                    if(IsEnemyPlayerChecked(Kb))
+                        if(IsCheckMate(Kb)) 
+                            gameRunning = false;
+                    stalemate = IsBaseStalemate(Kw);
                 }
                 else
                 {
-                    gameRunning = isMate(Kw);
-                    stalemate = isBaseStalemate(Kw, Kw.inCheck());
+                    if(IsEnemyPlayerChecked(Kw))
+                        if(IsCheckMate(Kw)) 
+                            gameRunning = false;
+                    stalemate = IsBaseStalemate(Kw);
                 }
-                if (is3FoldStalemate(snapShots,snapShotTheBoard()) || is50MovesStalemate(lastturns, turnCount) || stalemate || isInsufficientMaterial())
+                if (Is3FoldStalemate(snapShots,SnapShotTheBoard()) || Is50MovesStalemate() || stalemate || IsInsufficientMaterial())
                 {
                     Console.WriteLine("-----auto stalemate-----");
                     gameRunning = false;
                     break;
                 }
-                snapShots += snapShotTheBoard();
+                snapShots += SnapShotTheBoard();
             }
         }
-        public bool isMate(King king)
+        public bool IsEnemyPlayerChecked(King king)
         {
-            if (isCheck(king.getRow(), king.getCol(), !king.iswhite(), false) == 1)
+            if (IsCheck(king.GetRow(), king.GetCol(), !king.Iswhite(), false) == 1)
             {
-                string CheckedPlayerColor = king.iswhite() ? "WHITE" : "BLACK";
+                string CheckedPlayerColor = king.Iswhite() ? "WHITE" : "BLACK";
                 Console.WriteLine("----------" + CheckedPlayerColor + " is checked----------");
                 king.setInCheck();
-                if (isCheckMate(king))
-                {
-                    Console.WriteLine("------MATE--------");
-                    return false;
-                }
+                return true;
             }
-            return true;
+            return false;
         }
-        public void printBoard()
+        public void PrintBoard()
         {
             for (int row = 0; row < 8; row++)
             {
@@ -743,7 +732,7 @@ namespace Chess_proj
             Console.WriteLine("   A  B  C  D  E  F  G  H  ");
             Console.WriteLine("");
         }
-        public bool isValidInput(string input, int turnCount)
+        public bool IsValidInput(string input)
         {
             bool isWhite = false;
             if (turnCount % 2 != 0)
@@ -753,29 +742,29 @@ namespace Chess_proj
                 return false;
 
             int SrcLetter, SrcDigit, DstLetter, DstDigit;
-            SrcLetter = letterFromInput(input[0]);
-            SrcDigit = digitFromInput(input[1]);
-            DstLetter = letterFromInput(input[2]);
-            DstDigit = digitFromInput(input[3]);
+            SrcLetter = LetterFromInput(input[0]);
+            SrcDigit = DigitFromInput(input[1]);
+            DstLetter = LetterFromInput(input[2]);
+            DstDigit = DigitFromInput(input[3]);
             if (SrcLetter == 99 || SrcDigit == 99 || DstLetter == 99 || DstDigit == 99)
             {
                 Console.WriteLine("bad input");
                 return false;
             }
-            if (this.board[SrcDigit, SrcLetter] == null || (this.board[SrcDigit, SrcLetter].iswhite() != isWhite))
+            if (this.board[SrcDigit, SrcLetter] == null || (this.board[SrcDigit, SrcLetter].Iswhite() != isWhite))
             {
                 Console.WriteLine("illegal input");
                 return false;
             }
             return true;
         }
-        public void rookMovment(int DstDigit, int DstLetter)
+        public void RookMovment(int DstDigit, int DstLetter)
         {
             Rook rook = (Rook)this.board[DstDigit, DstLetter];
             rook.setMoved();
             this.board[DstDigit, DstLetter] = rook;
         }
-        public bool isMovementvalid(King WhiteKing, King BlackKing, int SrcDigit, int SrcLetter, int DstDigit, int DstLetter, int turnCount, int whitepartcounter, ChessPart[] WhiteExtralist, int blackpartcounter, ChessPart[] BlackExtralist, int[] lastturns)
+        public bool IsMovementvalid(King WhiteKing, King BlackKing, int SrcDigit, int SrcLetter, int DstDigit, int DstLetter)
         {
             bool isWhiteTurn=false;
             King insertedking = BlackKing;
@@ -784,79 +773,76 @@ namespace Chess_proj
                 isWhiteTurn = true;
                 insertedking = WhiteKing;
             }
-            if (this.board[SrcDigit, SrcLetter] != null && (this.board[SrcDigit, SrcLetter].iswhite() == isWhiteTurn))
+            if (this.board[SrcDigit, SrcLetter] != null && (this.board[SrcDigit, SrcLetter].Iswhite() == isWhiteTurn))
             {
                 if (this.board[SrcDigit, SrcLetter] is Pawn || this.board[SrcDigit, SrcLetter] is King)
                 {
-                    if (!isEnpassant( SrcDigit, SrcLetter, DstDigit, DstLetter, turnCount))
+                    if (!IsEnpassant(SrcDigit, SrcLetter, DstDigit, DstLetter))
                         return false;
-                    if (!isCastelingValid( SrcDigit, SrcLetter, DstDigit, DstLetter, turnCount, insertedking))
+                    if (!IsCastelingValid(SrcDigit, SrcLetter, DstDigit, DstLetter,insertedking))
                         return false;
                 }
                 else
                 {
-                    int res = this.board[SrcDigit, SrcLetter].checkPossibleMove(DstDigit, DstLetter, board[SrcDigit, SrcLetter].iswhite(), this.board, turnCount);
+                    int res = this.board[SrcDigit, SrcLetter].checkPossibleMove(DstDigit, DstLetter, board[SrcDigit, SrcLetter].Iswhite(), this.board, turnCount);
                     if (res == 0)
                     {
                         Console.WriteLine("move is not possible");
                         return false;
                     }
                 }
-                if (!isBoardChanged(lastturns, SrcDigit, SrcLetter, DstDigit, DstLetter, turnCount, insertedking))
+                if (!IsBoardChanged(SrcDigit, SrcLetter, DstDigit, DstLetter, insertedking))
                     return false;
                 if (this.board[DstDigit, DstLetter] is Pawn)
-                    pawnMovment(lastturns, DstDigit, DstLetter, turnCount, whitepartcounter, WhiteExtralist, blackpartcounter, BlackExtralist);
+                    PawnMovment(DstDigit, DstLetter);
                 if (this.board[DstDigit, DstLetter] is Rook)
-                    rookMovment(DstDigit, DstLetter);
+                    RookMovment(DstDigit, DstLetter);
                 return true;
             }
             Console.WriteLine("------move was not legal-----");
             return false;
         }
-        public void pawnMovment(int[] lastturns, int DstDigit, int DstLetter, int turnCount, int whitepartcounter, ChessPart[] WhiteExtralist, int blackpartcounter, ChessPart[] BlackExtralist)
+        public void PawnMovment( int DstDigit, int DstLetter)
         {
             Pawn pawn = (Pawn)this.board[DstDigit, DstLetter];
-            lastturns[0] = turnCount;
+            lastTimePawnMoved = turnCount;
             pawn.setplayed();
             this.board[DstDigit, DstLetter] = pawn;
-            if (pawn.iswhite())
-                pawn.Promotion(DstDigit, DstLetter, true,board, whitepartcounter, WhiteExtralist);
+            if (pawn.Iswhite())
+                pawn.Promotion(DstDigit, DstLetter, true,board);
             else
-            {
-                pawn.Promotion(DstDigit, DstLetter, false,board, blackpartcounter, BlackExtralist);
-            }
-
+                pawn.Promotion(DstDigit, DstLetter, false,board);
         }
-        public bool isBoardChanged(int[] lastturns, int SrcDigit, int SrcLetter, int DstDigit, int DstLetter, int turnCount, King insertedking)
+        public bool IsBoardChanged(int SrcDigit, int SrcLetter, int DstDigit, int DstLetter, King insertedking)
         {
-            ChessPart RemovedPart = createTempPart(this.board[DstDigit, DstLetter]); //incase the moving piece eats a part and king is in check while doing so
-            int lastturn = lastturns[1]; //storing the last time a piece was eaten in a variable before maybe reversing it
+            ChessPart RemovedPart = CreateTempPart(this.board[DstDigit, DstLetter]); //incase the moving piece eats a part and king is in check while doing so
+            int lastturn = lastTurnPieceWasTaken; //storing the last time a piece was eaten in a variable before maybe reversing it
             if (this.board[SrcDigit, SrcLetter] != null)
-                lastturns[1] = turnCount; //storing the current turn when a piece is being eaten.
+                lastTurnPieceWasTaken = turnCount; //storing the current turn when a piece is being eaten.
 
             this.board[DstDigit, DstLetter] = this.board[SrcDigit, SrcLetter];
             this.board[SrcDigit, SrcLetter] = null;
-            this.board[DstDigit, DstLetter].changeCoordinates(DstDigit, DstLetter);
-            if (isCheck(insertedking.getRow(), insertedking.getCol(), insertedking.iswhite(), true) != 0)
+            this.board[DstDigit, DstLetter].ChangeCoordinates(DstDigit, DstLetter);
+            if (IsCheck(insertedking.GetRow(), insertedking.GetCol(), insertedking.Iswhite(), true) != 0)
             {
-                string Color = insertedking.iswhite() ? "WHITE" : "BLACK";
+                string Color = insertedking.Iswhite() ? "WHITE" : "BLACK";
                 Console.WriteLine(Color + " king will be or is in check, move is not possible");
                 this.board[SrcDigit, SrcLetter] = this.board[DstDigit, DstLetter];
                 this.board[DstDigit, DstLetter] = RemovedPart;
-                this.board[SrcDigit, SrcLetter].changeCoordinates(SrcDigit, SrcLetter);
-                lastturns[1] = lastturn; //reversing it 
+                this.board[SrcDigit, SrcLetter].ChangeCoordinates(SrcDigit, SrcLetter);
+                lastTurnPieceWasTaken = lastturn; //reversing it 
                 return false;
             }
             else
-                insertedking.Notincheck();
+                insertedking.NotInCheck();
             return true;
         }
-        public bool isCastelingValid( int SrcDigit, int SrcLetter, int DstDigit, int DstLetter, int turnCount, King insertedking)
+        public bool IsCastelingValid(int SrcDigit, int SrcLetter, int DstDigit, int DstLetter, King insertedking)
         {
             if (this.board[SrcDigit, SrcLetter] is King)
             {
                 King king = (King)this.board[SrcDigit, SrcLetter];
-                int Kingres = king.checkPossibleMove(DstDigit, DstLetter, king.iswhite(),board, turnCount);
+                int Kingres = king.checkPossibleMove(DstDigit, DstLetter, king.Iswhite(),board,turnCount);
                 if (Kingres == 0)
                 {
                     Console.WriteLine("move is not possible");
@@ -866,14 +852,14 @@ namespace Chess_proj
                 if (Kingres == 2)
                 {
                     int Row = 7;
-                    if (!king.iswhite())
+                    if (!king.Iswhite())
                         Row = 0;
-                    int one = isCheck(Row, 1,  king.iswhite(), true);
-                    int two = isCheck(Row, 2,  king.iswhite(), true);
-                    int three = isCheck(Row, 3,  king.iswhite(), true);
-                    int five = isCheck(Row, 5,  king.iswhite(), true);
-                    int six = isCheck(Row, 6,  king.iswhite(), true);
-                    if (casteling(king, DstDigit, DstLetter, insertedking.iswhite(), one, two, three, five, six) != 1)
+                    int one = IsCheck(Row, 1,  king.Iswhite(), true);
+                    int two = IsCheck(Row, 2,  king.Iswhite(), true);
+                    int three = IsCheck(Row, 3,  king.Iswhite(), true);
+                    int five = IsCheck(Row, 5,  king.Iswhite(), true);
+                    int six = IsCheck(Row, 6,  king.Iswhite(), true);
+                    if (Casteling(king, DstDigit, DstLetter, insertedking.Iswhite(), one, two, three, five, six) != 1)
                         return false;
                     else
                         king.setCasteled();
@@ -881,12 +867,12 @@ namespace Chess_proj
             }
             return true;
         }
-        public bool isEnpassant( int SrcDigit, int SrcLetter, int DstDigit, int DstLetter, int turnCount)
+        public bool IsEnpassant(int SrcDigit, int SrcLetter, int DstDigit, int DstLetter)
         {
             if (this.board[SrcDigit, SrcLetter] is Pawn)
             {
                 Pawn pawn = (Pawn)this.board[SrcDigit, SrcLetter];
-                int Pawnres = pawn.checkPossibleMove(DstDigit, DstLetter, pawn.iswhite(),board, turnCount);
+                int Pawnres = pawn.checkPossibleMove(DstDigit, DstLetter, pawn.Iswhite(),board, turnCount);
                 if (Pawnres == 0)
                 {
                     Console.WriteLine("move is not possible");
@@ -904,7 +890,7 @@ namespace Chess_proj
             }
             return true;
         }
-        public int letterFromInput(char input)
+        public int LetterFromInput(char input)
         {
             int OutPut = 99;
             switch (input)
@@ -946,7 +932,7 @@ namespace Chess_proj
             }
             return OutPut;
         }
-        public int digitFromInput(char input)
+        public int DigitFromInput(char input)
         {
             int OutPut = 99;
             switch (input)
@@ -980,25 +966,25 @@ namespace Chess_proj
             }
             return OutPut;
         }
-        public int isCheck(int destrow, int destcol, bool iswhite, bool selfThreatCheck)
+        public int IsCheck(int destrow, int destcol, bool iswhite, bool selfThreatCheck)
         {
             int ans = 0;
             if (selfThreatCheck == true)
-                ans = isThreatened( destrow, destcol, iswhite, true);
+                ans = IsThreatened( destrow, destcol, iswhite, true);
             else
-                ans = isThreatened( destrow, destcol, iswhite, false);
+                ans = IsThreatened( destrow, destcol, iswhite, false);
             if (ans != 0)
                 return 1;
             return 0;
         }
-        public int isThreatened( int destrow, int destcol, bool isWhite, bool switcher)
+        public int IsThreatened( int destrow, int destcol, bool isWhite, bool switcher)
         {
             int ans = 0;
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    if (this.board[i, j] != null && ((this.board[i, j].iswhite() == !isWhite) == switcher))
+                    if (this.board[i, j] != null && ((this.board[i, j].Iswhite() == !isWhite) == switcher))
                     {
                         ans = this.board[i, j].checkPossibleMove(destrow, destcol, !isWhite == switcher,board, -1);
                         if (this.board[i, j] is Pawn)
@@ -1026,7 +1012,7 @@ namespace Chess_proj
             return 0;
 
         }
-        public ChessPart createTempPart(ChessPart stored)
+        public ChessPart CreateTempPart(ChessPart stored)
         {
             ChessPart temp;
             temp = null;
@@ -1044,7 +1030,7 @@ namespace Chess_proj
                 temp = (King)stored;
             return temp;
         }
-        public int rookCastelingMove(King king,int RookRow,int RookCol,int oneCheck, int twoCheck, int threeCheck, int fiveCheck, int sixCheck)
+        public int RookCastelingMove(King king,int RookRow,int RookCol,int oneCheck, int twoCheck, int threeCheck, int fiveCheck, int sixCheck)
         {
             int RookColDst=5;
             if (RookCol == 0)
@@ -1054,36 +1040,36 @@ namespace Chess_proj
             {
                 this.board[RookRow, RookColDst] = board[RookRow, RookCol];
                 this.board[RookRow, RookCol] = null;
-                this.board[RookRow, RookColDst].changeCoordinates(RookRow, RookColDst);
+                this.board[RookRow, RookColDst].ChangeCoordinates(RookRow, RookColDst);
                 king.setMoved();
                 return 1;
             }
             return 0;
         }
-        public int casteling(King king, int destrow, int destcol, bool iswhite, int Onechecked, int twochecked, int threechecked, int fivechecked, int sixchecekd)
+        public int Casteling(King king, int destrow, int destcol, bool iswhite, int Onechecked, int twochecked, int threechecked, int fivechecked, int sixchecekd)
         {
             //casteling for white
             if (iswhite)
             {
                 //left side casteling
                 if (destrow == 7 && destcol == 1 && !king.inCheck() && !king.getMoved() && this.board[7, 1] == null && this.board[7, 2] == null && this.board[7, 3] == null && (this.board[7, 0] != null))
-                    return rookCastelingMove(king, 7, 0, Onechecked, twochecked, threechecked, fivechecked, sixchecekd);
+                    return RookCastelingMove(king, 7, 0, Onechecked, twochecked, threechecked, fivechecked, sixchecekd);
                 //right side casteling
                 if (destrow == 7 && destcol == 6 && !king.inCheck() && !king.getMoved() && this.board[7, 5] == null && this.board[7, 6] == null && (this.board[7, 7] != null))
-                    return rookCastelingMove(king, 7, 7, Onechecked, twochecked, threechecked, fivechecked, sixchecekd);
+                    return RookCastelingMove(king, 7, 7, Onechecked, twochecked, threechecked, fivechecked, sixchecekd);
             }
             if (!iswhite)
             {
                 //left side casteling
                 if (destrow == 0 && destcol == 1 && !king.inCheck() && !king.getMoved() && this.board[0, 1] == null && this.board[0, 2] == null && this.board[0, 3] == null && (this.board[0, 0] != null))
-                    return rookCastelingMove(king, 0, 0, Onechecked, twochecked, threechecked, fivechecked, sixchecekd);
+                    return RookCastelingMove(king, 0, 0, Onechecked, twochecked, threechecked, fivechecked, sixchecekd);
                 //right side casteling
                 if (destrow == 0 && destcol == 6 && !king.inCheck() && !king.getMoved() && this.board[0, 5] == null && this.board[0, 6] == null && (this.board[0, 7] != null))
-                    return rookCastelingMove(king, 0, 7, Onechecked, twochecked, threechecked, fivechecked, sixchecekd);
+                    return RookCastelingMove(king, 0, 7, Onechecked, twochecked, threechecked, fivechecked, sixchecekd);
             }
             return 0;
         }
-        public bool isStalemateRequasted(string input,string CurrentPlayerColor)
+        public bool IsStalemateRequasted(string input,string CurrentPlayerColor)
         {
             string OtherPlayerAnswer;
             input = input.Trim();
@@ -1109,17 +1095,17 @@ namespace Chess_proj
             }
             return false;
         }
-        public bool isCheckMate(King king)
+        public bool IsCheckMate(King king)
         {
             bool CheckMate = true;
-            if (king.inCheck() == true)
+            if (king.inCheck())
             {
                 int ans = 0;
                 for (int SrcRow = 0; SrcRow < 8; SrcRow++)
                 {
                     for (int SrcCol = 0; SrcCol < 8; SrcCol++)
                     {
-                        if (this.board[SrcRow, SrcCol] != null && this.board[SrcRow, SrcCol].iswhite() == king.iswhite())
+                        if (this.board[SrcRow, SrcCol] != null && this.board[SrcRow, SrcCol].Iswhite() == king.Iswhite())
                         {
                             for (int DstRow = 0; DstRow < 8; DstRow++)
                             {
@@ -1127,28 +1113,28 @@ namespace Chess_proj
                                 {
                                     if (!((DstRow == SrcRow) && (DstCol == SrcCol)))
                                     {
-                                        ans = this.board[SrcRow, SrcCol].checkPossibleMove(DstRow, DstCol, this.board[SrcRow, SrcCol].iswhite(), this.board, -1);
+                                        ans = this.board[SrcRow, SrcCol].checkPossibleMove(DstRow, DstCol, this.board[SrcRow, SrcCol].Iswhite(), this.board, -1);
                                         if (this.board[SrcRow, SrcCol] is King)
                                         {
                                             King temp = (King)this.board[SrcRow, SrcCol];
-                                            ans = temp.checkPossibleMove(DstRow, DstCol, temp.iswhite(),board, -1);
+                                            ans = temp.checkPossibleMove(DstRow, DstCol, temp.Iswhite(),board, -1);
                                             if (ans != 0)
                                                 temp.reverseMoved();
                                         }
                                         if (ans != 0)
                                         {
-                                            ChessPart TempSrcPart = createTempPart(this.board[SrcRow, SrcCol]);
-                                            ChessPart TempDstPart = createTempPart(this.board[DstRow, DstCol]);
+                                            ChessPart TempSrcPart = CreateTempPart(this.board[SrcRow, SrcCol]);
+                                            ChessPart TempDstPart = CreateTempPart(this.board[DstRow, DstCol]);
                                             this.board[DstRow, DstCol] = this.board[SrcRow, SrcCol];
                                             this.board[SrcRow, SrcCol] = null;
-                                            this.board[DstRow, DstCol].changeCoordinates(DstRow, DstCol);
-                                            if (isCheck(king.getRow(), king.getCol(), king.iswhite(), true) == 0)
+                                            this.board[DstRow, DstCol].ChangeCoordinates(DstRow, DstCol);
+                                            if (IsCheck(king.GetRow(), king.GetCol(), king.Iswhite(), true) == 0)
                                             {
                                                 CheckMate = false;
                                             }
                                             this.board[SrcRow, SrcCol] = TempSrcPart;
                                             this.board[DstRow, DstCol] = TempDstPart;
-                                            TempSrcPart.changeCoordinates(SrcRow, SrcCol);
+                                            TempSrcPart.ChangeCoordinates(SrcRow, SrcCol);
                                             if (CheckMate == false)
                                                 return CheckMate;
                                         }
@@ -1162,27 +1148,26 @@ namespace Chess_proj
                 }
 
             }
+            Console.WriteLine("------MATE--------");
             return CheckMate;
         }  
-        public bool is50MovesStalemate(int[] lastturns, int currentTurn)
+        public bool Is50MovesStalemate()
         {
-            if (currentTurn - lastturns[0] == 51 || currentTurn - lastturns[1] == 51)
-            {
+            if (turnCount - lastTimePawnMoved == 51 || turnCount - lastTurnPieceWasTaken == 51)
                 return true;
-            }
             return false;
         }
-        public bool isBaseStalemate(King king, bool Incheck)
+        public bool IsBaseStalemate(King king)
         {
             bool Stalemate;
-            if (Incheck == true)
+            if (king.inCheck())
                 return false;
             int ans = 0;
             for (int SrcRow = 0; SrcRow < 8; SrcRow++)
             {
                 for (int SrcCol = 0; SrcCol < 8; SrcCol++)
                 {
-                    if (this.board[SrcRow, SrcCol] != null && this.board[SrcRow, SrcCol].iswhite() == king.iswhite())
+                    if (this.board[SrcRow, SrcCol] != null && this.board[SrcRow, SrcCol].Iswhite() == king.Iswhite())
                     {
                         for (int DstRow = 0; DstRow < 8; DstRow++)
                         {
@@ -1190,14 +1175,14 @@ namespace Chess_proj
                             {
                                 if (DstRow != SrcRow && DstCol != SrcCol)
                                 {
-                                    ans = this.board[SrcRow, SrcCol].checkPossibleMove(DstRow, DstCol, king.iswhite(),board, -1);
+                                    ans = this.board[SrcRow, SrcCol].checkPossibleMove(DstRow, DstCol, king.Iswhite(),board, -1);
 
                                     if (this.board[SrcRow, SrcCol] is King)
                                     {
                                         King temp = (King)board[SrcRow, SrcCol];
-                                        if (isCheck(DstRow, DstCol, king.iswhite(), true) == 0)
+                                        if (IsCheck(DstRow, DstCol, king.Iswhite(), true) == 0)
                                         {
-                                            ans = temp.checkPossibleMove(DstRow, DstCol, king.iswhite(),board, -1);
+                                            ans = temp.checkPossibleMove(DstRow, DstCol, king.Iswhite(),board, -1);
                                             if (ans != 0)
                                                 temp.reverseMoved();
                                         }
@@ -1219,7 +1204,7 @@ namespace Chess_proj
             }
             return true;
         }
-        public bool isInsufficientMaterial()
+        public bool IsInsufficientMaterial()
         {
             int bishopcounter = 0;
             int otherPartsCounter = 0;
@@ -1236,7 +1221,7 @@ namespace Chess_proj
             }
             return false;
         }
-        public string snapShotTheBoard()
+        public string SnapShotTheBoard()
         {
             string currentBoard = "";
             foreach (ChessPart item in this.board)
@@ -1256,7 +1241,7 @@ namespace Chess_proj
             }
             return currentBoard;
         }
-        public bool is3FoldStalemate(string snapShots,string currentBoard)
+        public bool Is3FoldStalemate(string snapShots,string currentBoard)
         {      
             int IdenticalBoardsCounter = 0;
             for (int charIndex = 0; charIndex < snapShots.Length; charIndex += 128)
