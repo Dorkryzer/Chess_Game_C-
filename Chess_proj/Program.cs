@@ -19,6 +19,7 @@ namespace Chess_proj
             */
             ChessGame game1 = new ChessGame();
             game1.play();
+            //////////////
         }
     }
     class ChessPart
