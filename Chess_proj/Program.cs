@@ -670,12 +670,13 @@ namespace Chess_proj
                     }
                     //Console.ReadLine();
                 } while (!(IsValidInput(input)) && gameRunning);
-                if (!IsMovementvalid(Kw, Kb, DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2])))
+                if (!IsMovementPossible(DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2])))
                     continue;
+                if (!IsBoardChanged(DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2])))
+                    continue;
+                SpecialPostMovementActions(DigitFromInput(input[3]), LetterFromInput(input[2]));
                 if (!gameRunning)
-                {
                     break;
-                }
                 PrintBoard();
                 turnCount++;
                 inputCounter += 4; 
@@ -753,28 +754,26 @@ namespace Chess_proj
             }
             if (this.board[SrcDigit, SrcLetter] == null || (this.board[SrcDigit, SrcLetter].Iswhite() != isWhite))
             {
-                Console.WriteLine("illegal input");
+                Console.WriteLine("------move was not legal-----");
                 return false;
             }
             return true;
         }
-        public void RookMovment(int DstDigit, int DstLetter)
+        public void RookActions(int DstDigit, int DstLetter)
         {
             Rook rook = (Rook)this.board[DstDigit, DstLetter];
             rook.setMoved();
             this.board[DstDigit, DstLetter] = rook;
         }
-        public bool IsMovementvalid(King WhiteKing, King BlackKing, int SrcDigit, int SrcLetter, int DstDigit, int DstLetter)
+        public bool IsMovementPossible(int SrcDigit, int SrcLetter, int DstDigit, int DstLetter)
         {
             bool isWhiteTurn=false;
-            King insertedking = BlackKing;
+            King insertedking = Kb;
             if (turnCount % 2 != 0)
             {
                 isWhiteTurn = true;
-                insertedking = WhiteKing;
-            }
-            if (this.board[SrcDigit, SrcLetter] != null && (this.board[SrcDigit, SrcLetter].Iswhite() == isWhiteTurn))
-            {
+                insertedking = Kw;
+            }  
                 if (this.board[SrcDigit, SrcLetter] is Pawn || this.board[SrcDigit, SrcLetter] is King)
                 {
                     if (!IsEnpassant(SrcDigit, SrcLetter, DstDigit, DstLetter))
@@ -791,30 +790,28 @@ namespace Chess_proj
                         return false;
                     }
                 }
-                if (!IsBoardChanged(SrcDigit, SrcLetter, DstDigit, DstLetter, insertedking))
-                    return false;
-                if (this.board[DstDigit, DstLetter] is Pawn)
-                    PawnMovment(DstDigit, DstLetter);
-                if (this.board[DstDigit, DstLetter] is Rook)
-                    RookMovment(DstDigit, DstLetter);
                 return true;
-            }
-            Console.WriteLine("------move was not legal-----");
-            return false;
         }
-        public void PawnMovment( int DstDigit, int DstLetter)
+        public void SpecialPostMovementActions(int DstDigit, int DstLetter)
+        {
+            if (this.board[DstDigit, DstLetter] is Pawn)
+                PawnActions(DstDigit, DstLetter);
+            if (this.board[DstDigit, DstLetter] is Rook)
+                RookActions(DstDigit, DstLetter);
+        }
+        public void PawnActions(int DstDigit, int DstLetter)
         {
             Pawn pawn = (Pawn)this.board[DstDigit, DstLetter];
             lastTimePawnMoved = turnCount;
             pawn.setplayed();
             this.board[DstDigit, DstLetter] = pawn;
-            if (pawn.Iswhite())
-                pawn.Promotion(DstDigit, DstLetter, true,board);
-            else
-                pawn.Promotion(DstDigit, DstLetter, false,board);
+            pawn.Promotion(DstDigit, DstLetter, pawn.Iswhite(), board); 
         }
-        public bool IsBoardChanged(int SrcDigit, int SrcLetter, int DstDigit, int DstLetter, King insertedking)
+        public bool IsBoardChanged(int SrcDigit, int SrcLetter, int DstDigit, int DstLetter)
         {
+            King insertedking = Kw;
+            if (turnCount % 2 != 0)
+                insertedking = Kw;
             ChessPart RemovedPart = CreateTempPart(this.board[DstDigit, DstLetter]); //incase the moving piece eats a part and king is in check while doing so
             int lastturn = lastTurnPieceWasTaken; //storing the last time a piece was eaten in a variable before maybe reversing it
             if (this.board[SrcDigit, SrcLetter] != null)
