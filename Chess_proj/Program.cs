@@ -9,18 +9,8 @@ namespace Chess_proj
     {
         static void Main(string[] args)
         {
-            /*
-            string WhiteStalemate = "a2a4c7c5d2d4d7d6d1d2e7e5d2f4e5e4h2h3f8e7f4h2e7h4a1a3c8e6a3g3e6b3b1d2d8a5d4d5e4e3c2c4f7f5f2f3f5f4";
-            string BlackStalemate = "e2e3a7a5d1h5a8a6h5a5h7h5h2h4a6h6a5c7f7f6c7d7e8f7d7b7d8d3b7b8d3h7b8c8f7g6c8e6";
-            string castlechecker = "f2f3d7d5a2a4d8d6g2g4a7a6g4g5a6a5g5g6d6g6f3f4b7b6f1h3h7h6g1f3g6g5b2b3b6b5f4f5b5b4f3e5";
-            string foolsmate = "e2e4e7e5f1c4b8c6d1h5g8f6h5f7 ";
-            string carlsen = "e2e4e7e5g1f3b8c6f1b5a7a6b5a4b7b5a4b3c6d4f3d4e5d4e1g1c8b7d1f3f8c5f3f7 ";
-            string kasparov = "e2e4e7e5g1f3b8c6d2d4e5d4f3d4g8f6d4c6b7c6e4e5d8e7d1e2f6d5c2c4e7b4b1d2d5f4e2e3f4g6f1d3f8c5e3g3e8g8e1g1d7d6d2b3g6e5a2a3b4b6b3c5b6c5c1e3c5a5b2b4a5a4e3d4f7f6d4e5f6e5f2f4c8f5f4e5f5d3g3d3d6e5d3d7a4b3d7c6b3e3g1h1g8h8f1e1e3c3c6c7a8c8c7a7c8c4h2h3c4f4a7c5c3b2c5e5b2b3e5e3b3c4a1c1c4f7e3g3h7h6b4b5f7d5a3a4f4a4c1b1f8f5b5b6f5g5b6b7d5b7g3g5";
-            */
             ChessGame game1 = new ChessGame();
             game1.Play();
-            
-            //////////////
         }
     }
     class ChessPart
@@ -603,16 +593,14 @@ namespace Chess_proj
                 do
                 { 
                     Console.WriteLine(currentPlayerColor + " - enter legal input to move, or write stalemate to ask for draw");
-                    input = Console.ReadLine(); //------------************USER INPUT************-------------
-                    //input = inputString.Substring(inputCounter, 4);
-                    //Console.WriteLine(input);
+                    input = Console.ReadLine();
+                    
                     if (IsStalemateRequasted(input,currentPlayerColor))
                     {
                         Console.WriteLine("GAME OVER");
                         gameRunning = false;
                         break;
                     }
-                    //Console.ReadLine();
                 } while (!(IsValidInput(input)) && gameRunning);
 
                 if (!IsMovementPossible(DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2])))
@@ -623,7 +611,6 @@ namespace Chess_proj
                 SpecialPostMovementActions(DigitFromInput(input[3]), LetterFromInput(input[2]));
 
                 PrintBoard();
-                inputCounter += 4; 
                 King enemyKing = isWhiteTurn ? Kb : Kw;
 
                 if(IsEnemyPlayerChecked(enemyKing))
