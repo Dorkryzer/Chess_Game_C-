@@ -624,15 +624,13 @@ namespace Chess_proj
 
                 PrintBoard();
                 inputCounter += 4; 
-                bool isStalemate;
                 King enemyKing = isWhiteTurn ? Kb : Kw;
 
                 if(IsEnemyPlayerChecked(enemyKing))
                     if(IsCheckMate(enemyKing)) 
-                        gameRunning = false;  
-                isStalemate = IsBaseStalemate(enemyKing);
-
-                if (Is3FoldStalemate(snapShots,SnapShotTheBoard()) || Is50MovesStalemate() || isStalemate || IsInsufficientMaterial())
+                        gameRunning = false; 
+                
+                if (Is3FoldStalemate(snapShots,SnapShotTheBoard()) || Is50MovesStalemate() || IsBaseStalemate(enemyKing) || IsInsufficientMaterial())
                 {
                     Console.WriteLine("-----auto stalemate-----");
                     gameRunning = false;
@@ -693,13 +691,7 @@ namespace Chess_proj
                 return false;
             }
             return true;
-        }
-        public void RookActions(int dstDigit, int dstLetter)
-        {
-            Rook rook = (Rook)this.board[dstDigit, dstLetter];
-            rook.SetMoved();
-            this.board[dstDigit, dstLetter] = rook;
-        }
+        } 
         public bool IsMovementPossible(int srcDigit, int srcLetter, int dstDigit, int dstLetter)
         {  
             King insertedking = Kb;
@@ -1136,9 +1128,7 @@ namespace Chess_proj
                     otherPartsCounter++;
             }
             if (bishopcounter <= 1 && otherPartsCounter == 2 || otherPartsCounter == 2)
-            {
                 return true;
-            }
             return false;
         }
         public string SnapShotTheBoard()
@@ -1167,9 +1157,7 @@ namespace Chess_proj
             for (int charIndex = 0; charIndex < snapShots.Length; charIndex += 128)
             {
                 if (currentBoard.Equals(snapShots.Substring(charIndex, 128)))
-                {
                     IdenticalBoardsCounter++;
-                }
                 if(IdenticalBoardsCounter==3)
                     return true;
             }
