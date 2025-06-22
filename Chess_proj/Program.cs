@@ -19,6 +19,7 @@ namespace Chess_proj
             */
             ChessGame game1 = new ChessGame();
             game1.Play();
+            
             //////////////
         }
     }
@@ -240,9 +241,7 @@ namespace Chess_proj
                             for (int i = row + 1; i < destRow; i++)
                             {
                                 if (board[i, destCol] != null)
-                                {
                                     return 0;
-                                }
                             }
                         }
                         if (rowGap > 0)
@@ -250,9 +249,7 @@ namespace Chess_proj
                             for (int i = row - 1; i > destRow; i--)
                             {
                                 if (board[i, destCol] != null)
-                                {
                                     return 0;
-                                }
                             }
                         }
 
@@ -603,6 +600,7 @@ namespace Chess_proj
     class ChessGame
     {
         int turnCount = 1;
+        bool isWhiteTurn;
         bool gameRunning = true;
         int lastTimePawnMoved;
         int lastTurnPieceWasTaken;
@@ -655,9 +653,10 @@ namespace Chess_proj
             while (gameRunning)
             {
                 string input;
+                isWhiteTurn = turnCount % 2 != 0 ? true : false;
+                string currentPlayerColor = isWhiteTurn ? "WHITE" : "BLACK";
                 do
-                {
-                    string currentPlayerColor = turnCount % 2 == 0 ? "BLACK" : "WHITE";
+                { 
                     Console.WriteLine(currentPlayerColor + " - enter legal input to move, or write stalemate to ask for draw");
                     input = Console.ReadLine(); //------------************USER INPUT************-------------
                     //input = inputString.Substring(inputCounter, 4);
@@ -670,26 +669,30 @@ namespace Chess_proj
                     }
                     //Console.ReadLine();
                 } while (!(IsValidInput(input)) && gameRunning);
+
                 if (!IsMovementPossible(DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2])))
                     continue;
-                if (!IsBoardChanged(DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2])))
+                if (!IsBoardChanged(DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2]), currentPlayerColor))
                     continue;
                 SpecialPostMovementActions(DigitFromInput(input[3]), LetterFromInput(input[2]));
+
                 PrintBoard();
-                turnCount++;
                 inputCounter += 4; 
                 bool stalemate;
-                King enemyKing = turnCount % 2 == 0 ? Kb : Kw;
+                King enemyKing = isWhiteTurn ? Kb : Kw;
+
                 if(IsEnemyPlayerChecked(enemyKing))
                     if(IsCheckMate(enemyKing)) 
                         gameRunning = false;  
                 stalemate = IsBaseStalemate(enemyKing);
+
                 if (Is3FoldStalemate(snapShots,SnapShotTheBoard()) || Is50MovesStalemate() || stalemate || IsInsufficientMaterial())
                 {
                     Console.WriteLine("-----auto stalemate-----");
                     gameRunning = false;
                     break;
                 }
+                turnCount++;
                 snapShots += SnapShotTheBoard();
             }
         }
@@ -724,9 +727,6 @@ namespace Chess_proj
         }
         public bool IsValidInput(string input)
         {
-            bool isWhite = false;
-            if (turnCount % 2 != 0)
-                isWhite = true;
             input = input.Trim();
             if (input.Length != 4 || input == "")
                 return false;
@@ -741,7 +741,7 @@ namespace Chess_proj
                 Console.WriteLine("bad input");
                 return false;
             }
-            if (this.board[SrcDigit, SrcLetter] == null || (this.board[SrcDigit, SrcLetter].Iswhite() != isWhite))
+            if (this.board[SrcDigit, SrcLetter] == null || (this.board[SrcDigit, SrcLetter].Iswhite() != isWhiteTurn))
             {
                 Console.WriteLine("------move was not legal-----");
                 return false;
@@ -755,14 +755,11 @@ namespace Chess_proj
             this.board[dstDigit, dstLetter] = rook;
         }
         public bool IsMovementPossible(int srcDigit, int srcLetter, int dstDigit, int dstLetter)
-        {
-            bool isWhiteTurn=false;
+        {  
             King insertedking = Kb;
-            if (turnCount % 2 != 0)
-            {
-                isWhiteTurn = true;
+            if (isWhiteTurn)
                 insertedking = Kw;
-            }  
+              
                 if (this.board[srcDigit, srcLetter] is Pawn || this.board[srcDigit, srcLetter] is King)
                 {
                     if (!IsEnpassant(srcDigit, srcLetter, dstDigit, dstLetter))
@@ -796,10 +793,10 @@ namespace Chess_proj
             this.board[dstDigit, dstLetter] = pawn;
             pawn.Promotion(dstDigit, dstLetter, pawn.Iswhite(), board); 
         }
-        public bool IsBoardChanged(int srcDigit, int srcLetter, int dstDigit, int dstLetter)
+        public bool IsBoardChanged(int srcDigit, int srcLetter, int dstDigit, int dstLetter, string currentPlayerColor)
         {
             King insertedKing = Kb;
-            if (turnCount % 2 != 0)
+            if (isWhiteTurn)
                 insertedKing = Kw;
             ChessPart removedPart = CreateTempPart(this.board[dstDigit, dstLetter]); //incase the moving piece eats a part and king is in check while doing so
             int lastTurn = lastTurnPieceWasTaken; //storing the last time a piece was eaten in a variable before maybe reversing it
@@ -811,8 +808,7 @@ namespace Chess_proj
             this.board[dstDigit, dstLetter].ChangeCoordinates(dstDigit, dstLetter);
             if (IsCheck(insertedKing.GetRow(), insertedKing.GetCol(), insertedKing.Iswhite(), true) != 0)
             {
-                string Color = insertedKing.Iswhite() ? "WHITE" : "BLACK";
-                Console.WriteLine(Color + " king will be or is in check, move is not possible");
+                Console.WriteLine(currentPlayerColor + " king will be or is in check, move is not possible");
                 this.board[srcDigit, srcLetter] = this.board[dstDigit, dstLetter];
                 this.board[dstDigit, dstLetter] = removedPart;
                 this.board[srcDigit, srcLetter].ChangeCoordinates(srcDigit, srcLetter);
@@ -1023,25 +1019,25 @@ namespace Chess_proj
             }
             return 0;
         }
-        public int Casteling(King king, int destrow, int destcol, bool iswhite, int oneChecked, int twoChecked, int threeChecked, int fiveChecked, int sixChecekd)
+        public int Casteling(King king, int destRow, int destCol, bool isWhite, int oneChecked, int twoChecked, int threeChecked, int fiveChecked, int sixChecekd)
         {
             //casteling for white
-            if (iswhite)
+            if (isWhite)
             {
                 //left side casteling
-                if (destrow == 7 && destcol == 1 && !king.inCheck() && !king.getMoved() && this.board[7, 1] == null && this.board[7, 2] == null && this.board[7, 3] == null && (this.board[7, 0] != null))
+                if (destRow == 7 && destCol == 1 && !king.inCheck() && !king.getMoved() && this.board[7, 1] == null && this.board[7, 2] == null && this.board[7, 3] == null && (this.board[7, 0] != null))
                     return RookCastelingMove(king, 7, 0, oneChecked, twoChecked, threeChecked, fiveChecked, sixChecekd);
                 //right side casteling
-                if (destrow == 7 && destcol == 6 && !king.inCheck() && !king.getMoved() && this.board[7, 5] == null && this.board[7, 6] == null && (this.board[7, 7] != null))
+                if (destRow == 7 && destCol == 6 && !king.inCheck() && !king.getMoved() && this.board[7, 5] == null && this.board[7, 6] == null && (this.board[7, 7] != null))
                     return RookCastelingMove(king, 7, 7, oneChecked, twoChecked, threeChecked, fiveChecked, sixChecekd);
             }
-            if (!iswhite)
+            if (!isWhite)
             {
                 //left side casteling
-                if (destrow == 0 && destcol == 1 && !king.inCheck() && !king.getMoved() && this.board[0, 1] == null && this.board[0, 2] == null && this.board[0, 3] == null && (this.board[0, 0] != null))
+                if (destRow == 0 && destCol == 1 && !king.inCheck() && !king.getMoved() && this.board[0, 1] == null && this.board[0, 2] == null && this.board[0, 3] == null && (this.board[0, 0] != null))
                     return RookCastelingMove(king, 0, 0, oneChecked, twoChecked, threeChecked, fiveChecked, sixChecekd);
                 //right side casteling
-                if (destrow == 0 && destcol == 6 && !king.inCheck() && !king.getMoved() && this.board[0, 5] == null && this.board[0, 6] == null && (this.board[0, 7] != null))
+                if (destRow == 0 && destCol == 6 && !king.inCheck() && !king.getMoved() && this.board[0, 5] == null && this.board[0, 6] == null && (this.board[0, 7] != null))
                     return RookCastelingMove(king, 0, 7, oneChecked, twoChecked, threeChecked, fiveChecked, sixChecekd);
             }
             return 0;
