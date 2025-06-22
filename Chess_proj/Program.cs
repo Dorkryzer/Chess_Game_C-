@@ -257,7 +257,7 @@ namespace Chess_proj
                     absColGap = -1 * colGap;
                 else
                     absColGap = colGap; 
-                //check if there is something between the locations
+
                 if (row != destRow && col != destCol && absColGap == absRowGap)
                 {
                     if (rowGap > 0 && colGap > 0)
@@ -338,6 +338,8 @@ namespace Chess_proj
             public Queen(int row, int col, bool isWhite, string name) : base(row, col, isWhite, name) { }
             public override int CheckPossibleMove(int destRow, int destCol, bool iswhite, ChessPart[,] board, int globalCounter)
             {
+                Rook queenAsRook = new Rook(row,col,iswhite,"R");
+                Bishop queenAsBishop = new Bishop(row, col, iswhite, "B");
                 int rowGap = row - destRow;
                 int colGap = col - destCol;
                 int absRowGap, absColGap;
@@ -349,105 +351,9 @@ namespace Chess_proj
                     absColGap = -1 * colGap;
                 else
                     absColGap = colGap;
-                //check if there is something between the locations - moving like bishop
-                if (row != destRow && col != destCol && absColGap == absRowGap)
-                {
-                    if (rowGap > 0 && colGap > 0)
-                    {
-                        for (int i = row - 1, j = col - 1; i > destRow; i--, j--)
-                        {
-                            if (board[i, j] != null)
-                                return 0;
-                        }
-                    }
-                    if (rowGap > 0 && colGap < 0)
-                    {
-                        for (int i = row - 1, j = col + 1; i > destRow; i--, j++)
-                        {
-                            if (board[i, j] != null)
-                                return 0;
-                        }
-                    }
-                    if (rowGap < 0 && colGap > 0)
-                    {
-                        for (int i = row + 1, j = col - 1; i < destRow; i++, j--)
-                        {
-                            if (board[i, j] != null)
-                                return 0;
-                        }
-                    }
-                    if (rowGap < 0 && colGap < 0)
-                    {
-                        for (int i = row + 1, j = col + 1; i < destRow; i++, j++)
-                        {
-                            if (board[i, j] != null)
-                                return 0;
-                        }
-                    }
-                }
-                //checking if there is something in between the locations - moving like rook
-                if ((row != destRow && col == destCol) || (row == destRow && col != destCol))
-                {
-                    if (row != destRow && col == destCol)
-                    {
-                        if (rowGap < 0)
-                        {
-                            for (int i = row + 1; i < destRow; i++)
-                            {
-                                if (board[i, destCol] != null)
-                                    return 0;
-                            }
-                        }
-                        if (rowGap > 0)
-                        {
-                            for (int i = row - 1; i > destRow; i--)
-                            {
-                                if (board[i, destCol] != null)
-                                    return 0;
-                            }
-                        }
-                    }
-                    if (row == destRow && col != destCol)
-                    {
-                        if (colGap < 0)
-                        {
-                            for (int j = col + 1; j < destCol; j++)
-                            {
-                                if (board[destRow, j] != null)
-                                    return 0;
-                            }
-                        }
-                        if (colGap > 0)
-                        {
-                            for (int j = col - 1; j > destCol; j--)
-                            {
-                                if (board[destRow, j] != null)
-                                    return 0;
-                            }
-                        }
-                    }
-                }
-                if (absRowGap == 0 && absColGap == 1 || absColGap == 0 && absRowGap == 1 || absRowGap == absColGap && absRowGap == 1)
-                {
-                    if (board[destRow, destCol] == null)
-                        return 1;
-                    //checking if a location is of the same color
-                    if (board[destRow, destCol].GetType()[1] == 'w' && iswhite || board[destRow, destCol].GetType()[1] == 'b' && (!iswhite))
-                        return 0;
-                    else
-                        return 1;
-                }
-                if (absRowGap >= 1 && absColGap > absRowGap || absColGap >= 1 && absRowGap > absColGap)
-                {
-                    return 0;
-                }
-                if (board[destRow, destCol] == null)
-                    return 1;
-                //checking if a location is of the same color
-                if (board[destRow, destCol].GetType()[1] == 'w' && iswhite || board[destRow, destCol].GetType()[1] == 'b' && (!iswhite))
-                    return 0;
-                else
-                    return 1;
+                int ans = queenAsBishop.CheckPossibleMove(destRow, destCol, iswhite, board, globalCounter) == 1 || queenAsRook.CheckPossibleMove(destRow, destCol, iswhite, board, globalCounter) == 1 ? 1 : 0;
+                
+                return ans;
             }
         }
     class King : ChessPart
@@ -539,7 +445,6 @@ namespace Chess_proj
         bool gameRunning = true;
         int lastTimePawnMoved;
         int lastTurnPieceWasTaken;
-        int inputCounter = 0;
         string snapShots;
         ChessPart[,] board; 
         King Kw, Kb;
@@ -605,8 +510,9 @@ namespace Chess_proj
 
                 if (!IsMovementPossible(DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2])))
                     continue;
+                ChessPart removedPart = CreateTempPart(this.board[DigitFromInput(input[3]), LetterFromInput(input[2])]);
                 BoardMovement(DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2]));
-                if (IsSelfChecked(DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2]), currentPlayerColor))
+                if (IsSelfChecked(DigitFromInput(input[1]), LetterFromInput(input[0]), DigitFromInput(input[3]), LetterFromInput(input[2]), currentPlayerColor,removedPart))
                     continue;
                 SpecialPostMovementActions(DigitFromInput(input[3]), LetterFromInput(input[2]));
 
@@ -720,14 +626,13 @@ namespace Chess_proj
             this.board[dstDigit, dstLetter] = this.board[srcDigit, srcLetter];
             this.board[srcDigit, srcLetter] = null;
             this.board[dstDigit, dstLetter].ChangeCoordinates(dstDigit, dstLetter);
-            this.board[dstDigit, dstLetter].SetMoved();
         }
-        public bool IsSelfChecked(int srcDigit, int srcLetter, int dstDigit, int dstLetter, string currentPlayerColor)
+        public bool IsSelfChecked(int srcDigit, int srcLetter, int dstDigit, int dstLetter, string currentPlayerColor,ChessPart removedPart)
         {
             King insertedKing = Kb;
             if (isWhiteTurn)
                 insertedKing = Kw;
-            ChessPart removedPart = CreateTempPart(this.board[dstDigit, dstLetter]); //incase the moving piece eats a part and king is in check while doing so
+            //ChessPart removedPart = CreateTempPart(this.board[dstDigit, dstLetter]); //incase the moving piece eats a part and king is in check while doing so
             int lastTurn = lastTurnPieceWasTaken; //storing the last time a piece was eaten in a variable before maybe reversing it
             if (this.board[dstDigit, dstLetter] != null)
                 lastTurnPieceWasTaken = turnCount; //storing the current turn when a piece is being eaten.
@@ -742,7 +647,10 @@ namespace Chess_proj
                 return true;
             }
             else
+            {
                 insertedKing.NotInCheck();
+                this.board[dstDigit, dstLetter].SetMoved();
+            }
             return false;
         }
         public bool IsCastelingValid(int srcDigit, int srcLetter, int dstDigit, int dstLetter, King insertedKing)
